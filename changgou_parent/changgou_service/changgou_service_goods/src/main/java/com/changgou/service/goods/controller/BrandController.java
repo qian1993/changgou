@@ -1,14 +1,17 @@
 package com.changgou.service.goods.controller;
 
+import com.changgou.common.pojo.PageResult;
 import com.changgou.common.pojo.Result;
 import com.changgou.common.pojo.StatusCode;
 import com.changgou.goods.pojo.Brand;
 import com.changgou.service.goods.service.BrandService;
+import com.github.pagehelper.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/brand")
 @RestController
@@ -85,6 +88,47 @@ public class BrandController {
             return new Result(true, StatusCode.OK, "删除成功");
         }
         return new Result(false, StatusCode.ERROR, "删除失败");
+    }
+
+    /**
+     * 根据条件查询品牌
+     * @param map
+     * @return
+     */
+    @GetMapping("/search")
+    public Result search(@RequestParam Map map) {
+        log.info("-----------------BrandController.search(Map)-----start--------------");
+        List<Brand> list = brandService.searchByParams(map);
+        return new Result(true, StatusCode.OK, "查询成功", list);
+    }
+
+    /**
+     * 分页查询品牌
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/findPage/{pageNumber}/{pageSize}")
+    public Result findPage(@PathVariable("pageNumber")Integer pageNumber, @PathVariable("pageSize")Integer pageSize) {
+        log.info("-----------------BrandController.findPage(pageNumber, pageSize)-----start--------------");
+        Page<Brand> pageInfo = brandService.findPage(pageNumber, pageSize);
+        PageResult pageResult = new PageResult(pageInfo.getTotal(), pageInfo.getResult());
+        return new Result(true, StatusCode.OK, "查询成功", pageResult);
+    }
+
+    /**
+     * 根据条件分页查询品牌
+     * @param map
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/search/{pageNumber}/{pageSize}")
+    public Result searchPage(@RequestParam Map map, @PathVariable("pageNumber")Integer pageNumber, @PathVariable("pageSize")Integer pageSize) {
+        log.info("-----------------BrandController.searchPage(Map, pageNumber, pageSize)-----start--------------");
+        Page<Brand> page = brandService.findPage(map, pageNumber, pageSize);
+        PageResult pageResult = new PageResult(page.getTotal(), page.getResult());
+        return new Result(true, StatusCode.OK, "查询成功", pageResult);
     }
 
 }

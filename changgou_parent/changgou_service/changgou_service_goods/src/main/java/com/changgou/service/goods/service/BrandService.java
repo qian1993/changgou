@@ -1,8 +1,10 @@
 package com.changgou.service.goods.service;
 
 import com.changgou.goods.pojo.Brand;
+import com.github.pagehelper.Page;
 
 import java.util.List;
+import java.util.Map;
 
 public interface BrandService {
     /**
@@ -38,4 +40,28 @@ public interface BrandService {
      * @return
      */
     public int deleteById(Integer id);
+
+    /**
+     * 根据条件查询
+     * @param map
+     * @return
+     */
+    public List<Brand> searchByParams(Map map);
+
+    /**
+     * 分页查询品牌
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    public Page<Brand> findPage(Integer pageNumber, Integer pageSize);
+
+    /**
+     * 根据条件分页查询品牌
+     * @param map
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    public Page<Brand> findPage(Map map, Integer pageNumber, Integer pageSize);
 }
